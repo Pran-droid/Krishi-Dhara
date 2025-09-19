@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>कृषि धारा - Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .app-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .leaf-icon {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        .welcome-title {
+            font-size: 20px;
+            color: #2d5016;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .tab-container {
+            display: flex;
+            background: #f5f5f5;
+            border-radius: 25px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #999;
+        }
+
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .send-otp-btn {
+            background: transparent;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .send-otp-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .send-otp-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .forgot-password {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 13px;
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 25px 0;
+            position: relative;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+        }
+
+        .switch-auth {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .switch-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-link:hover {
+            text-decoration: underline;
+        }
+
+        .phone-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .countdown {
+            color: #666;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2d5016;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin: 10px 0;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="app-logo">
+            <svg class="leaf-icon" viewBox="0 0 24 24">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+        </div>
+        
+        <h1 class="welcome-title">Welcome to कृषि धारा</h1>
+        <p class="welcome-subtitle">Your smart farming companion</p>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="form-container active" id="loginForm">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                    </svg>
+                    <div class="phone-container">
+                        <input type="tel" class="form-input" id="loginPhone" placeholder="Phone Number" required>
+                        <button type="button" class="send-otp-btn" id="loginSendOTP" onclick="sendOTP('login')">Send OTP</button>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden" id="loginOTPGroup">
+                    <label style="font-size: 13px; color: #666; margin-bottom: 10px; display: block;">Enter OTP sent to your phone</label>
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+                    </div>
+                    <div class="countdown" id="loginCountdown"></div>
+                </div>
+                
+                <button type="submit" class="primary-btn" id="loginBtn">Send OTP</button>
+            </form>
+            
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            
+            <div class="divider">
+                <span>or</span>
+            </div>
+            
+            <p class="switch-auth">
+                Don't have an account? 
+                <a href="#" class="switch-link" onclick="switchTab('signup')">Sign Up</a>
+            </p>
+        </div>
+        
+        <!-- Signup Form -->
+        <div class="form-container" id="signupForm">
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                    </svg>
+                    <input type="text" class="form-input" placeholder="Full Name" required>
+                </div>
+                
+                <div class="form-group">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                    </svg>
+                    <div class="phone-container">
+                        <input type="tel" class="form-input" id="signupPhone" placeholder="Phone Number" required>
+                        <button type="button" class="send-otp-btn" id="signupSendOTP" onclick="sendOTP('signup')">Send OTP</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                    </svg>
+                    <input type="text" class="form-input" placeholder="Location (Village/City)" required>
+                </div>
+                
+                <div class="form-group">
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19Z"/>
+                    </svg>
+                    <input type="text" class="form-input" placeholder="Land Size (e.g., 2.5 acres)" required>
+                </div>
+                
+                <div class="form-group hidden" id="signupOTPGroup">
+                    <label style="font-size: 13px; color: #666; margin-bottom: 10px; display: block;">Enter OTP sent to your phone</label>
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+                    </div>
+                    <div class="countdown" id="signupCountdown"></div>
+                </div>
+                
+                <button type="submit" class="primary-btn" id="signupBtn">Send OTP</button>
+            </form>
+            
+            <div class="divider">
+                <span>or</span>
+            </div>
+            
+            <p class="switch-auth">
+                Already have an account? 
+                <a href="#" class="switch-link" onclick="switchTab('login')">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let otpSent = {
+            login: false,
+            signup: false
+        };
+
+        let otpTimer = {
+            login: null,
+            signup: null
+        };
+
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update form containers
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        function sendOTP(type) {
+            const phoneInput = document.getElementById(type + 'Phone');
+            const sendBtn = document.getElementById(type + 'SendOTP');
+            const otpGroup = document.getElementById(type + 'OTPGroup');
+            const mainBtn = document.getElementById(type + 'Btn');
+            const countdown = document.getElementById(type + 'Countdown');
+
+            if (!phoneInput.value) {
+                alert('Please enter your phone number');
+                return;
+            }
+
+            // Simulate OTP sending
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+
+            setTimeout(() => {
+                otpSent[type] = true;
+                otpGroup.classList.remove('hidden');
+                sendBtn.textContent = 'Resend OTP';
+                mainBtn.textContent = type === 'login' ? 'Verify & Login' : 'Verify & Create Account';
+
+                // Start countdown
+                startCountdown(type, 30);
+
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success-message';
+                successMsg.textContent = `OTP sent to ${phoneInput.value}`;
+                otpGroup.parentNode.insertBefore(successMsg, otpGroup);
+
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 3000);
+            }, 1500);
+        }
+
+        function startCountdown(type, seconds) {
+            const countdown = document.getElementById(type + 'Countdown');
+            const sendBtn = document.getElementById(type + 'SendOTP');
+            
+            sendBtn.disabled = true;
+            
+            otpTimer[type] = setInterval(() => {
+                countdown.textContent = `Resend OTP in ${seconds}s`;
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(otpTimer[type]);
+                    countdown.textContent = '';
+                    sendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function moveToNext(current, index) {
+            if (current.value.length === 1 && index < 5) {
+                const nextInput = current.parentElement.children[index + 1];
+                if (nextInput) {
+                    nextInput.focus();
+                }
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            if (!otpSent.login) {
+                sendOTP('login');
+                return;
+            }
+
+            // Collect OTP
+            const otpInputs = document.querySelectorAll('#loginForm .otp-input');
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (otp.length !== 6) {
+                alert('Please enter complete OTP');
+                return;
+            }
+
+            // Simulate login verification
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.textContent = 'Verifying...';
+            loginBtn.disabled = true;
+
+            setTimeout(() => {
+                // Redirect to start page after successful verification
+                window.location.href = '/start';
+            }, 1200);
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            if (!otpSent.signup) {
+                sendOTP('signup');
+                return;
+            }
+
+            // Collect OTP
+            const otpInputs = document.querySelectorAll('#signupForm .otp-input');
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (otp.length !== 6) {
+                alert('Please enter complete OTP');
+                return;
+            }
+
+            // Simulate signup verification
+            const signupBtn = document.getElementById('signupBtn');
+            signupBtn.textContent = 'Creating Account...';
+            signupBtn.disabled = true;
+
+            setTimeout(() => {
+                // After account creation, redirect to auth page (login tab by default)
+                window.location.href = '/auth';
+            }, 1200);
+        }
+
+        // Auto-focus first OTP input when OTP section becomes visible
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const target = mutation.target;
+                    if (target.classList.contains('form-group') && !target.classList.contains('hidden')) {
+                        const firstOtpInput = target.querySelector('.otp-input');
+                        if (firstOtpInput) {
+                            setTimeout(() => firstOtpInput.focus(), 100);
+                        }
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('#loginOTPGroup, #signupOTPGroup').forEach(group => {
+            observer.observe(group, { attributes: true });
+        });
+    </script>
+</body>
+</html>
