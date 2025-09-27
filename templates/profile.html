@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Profile - Krishi Dhara</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            color: #2d5016;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .leaf-icon {
+            width: 30px;
+            height: 30px;
+            fill: #4CAF50;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            font-size: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .profile-avatar::after {
+            content: '👨‍🌾';
+            font-size: 50px;
+        }
+
+        .edit-avatar {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .farmer-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 5px;
+        }
+
+        .farmer-id {
+            font-size: 14px;
+            color: #666;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .profile-info {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            fill: #4CAF50;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .info-item {
+            background: rgba(76, 175, 80, 0.05);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d5016;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-icon {
+            width: 18px;
+            height: 18px;
+            fill: #4CAF50;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .edit-profile-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            color: #2d5016;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <button class="back-btn" onclick="goBack()">
+                <svg fill="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <div class="app-brand">
+                <div class="app-logo">
+                    <svg class="leaf-icon" viewBox="0 0 24 24">
+                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                    </svg>
+                </div>
+                <div class="app-title">Profile</div>
+            </div>
+            <div style="width: 40px;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="success-message" id="successMessage">
+            Profile updated successfully! / प्रोफ़ाइल सफलतापूर्वक अपडेट हुई!
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="edit-avatar" onclick="editAvatar()">
+                        <svg fill="#4CAF50" viewBox="0 0 24 24" width="16" height="16">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="farmer-name">रामकृष्ण शर्मा</div>
+                <div class="farmer-name" style="font-size: 18px; margin-top: 5px;">Ramkrishna Sharma</div>
+                <div class="farmer-id">
+                    Farmer ID: KD-2025-001247
+                    <span class="verification-badge">
+                        <svg fill="currentColor" viewBox="0 0 24 24" width="12" height="12">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                        Verified
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                    </svg>
+                    Personal Information
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">
+                            <svg class="info-icon" viewBox="0 0 24 24">
+                                <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                            </svg>
+                            Village Rampur, Dist. Ranchi, Jharkhand
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value">
+                            <svg class="info-icon" viewBox="0 0 24 24">
+                                <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                            </svg>
+                            +91 99999 99999
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                    </svg>
+                    Farm Information
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Total Land Size</div>
+                        <div class="info-value">
+                            <svg class="info-icon" viewBox="0 0 24 24">
+                                <path d="M12,2L13.09,8.26L22,9L13.09,9.74L12,16L10.91,9.74L2,9L10.91,8.26L12,2M6.5,12L7.5,15.5L11,16.5L7.5,17.5L6.5,21L5.5,17.5L2,16.5L5.5,15.5L6.5,12M17.5,12L18.5,15.5L22,16.5L18.5,17.5L17.5,21L16.5,17.5L13,16.5L16.5,15.5L17.5,12Z"/>
+                            </svg>
+                            5 Acres (2.1 Hectares)
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Annual Revenue</div>
+                        <div class="info-value">
+                            <svg class="info-icon" viewBox="0 0 24 24">
+                                <path d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z"/>
+                            </svg>
+                            ₹3,85,000 (Last Year)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Soil Tests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Crop Cycles</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <button class="edit-profile-btn" onclick="editProfile()">
+                <svg fill="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                Edit Profile / प्रोफ़ाइल संपादित करें
+            </button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('home')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('ai-recommendations')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 1L9 9L1 12L9 15L12 23L15 15L23 12L15 9L12 1Z"/>
+            </svg>
+            <span class="nav-label">AI Tips</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('scan')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4A8 8 0 0 1 20 12A8 8 0 0 1 12 20A8 8 0 0 1 4 12A8 8 0 0 1 12 4M12 6A6 6 0 0 0 6 12A6 6 0 0 0 12 18A6 6 0 0 0 18 12A6 6 0 0 0 12 6M12 8A4 4 0 0 1 16 12A4 4 0 0 1 12 16A4 4 0 0 1 8 12A4 4 0 0 1 12 8M11 10V14H13V10H11M10 15V17H14V15H10Z"/>
+            </svg>
+            <span class="nav-label">Scan</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('weather')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6.5 20Q4.22 20 2.61 18.43Q1 16.85 1 14.58Q1 12.63 2.17 11.1Q3.35 9.57 5.25 9.15Q5.88 6.85 7.75 5.43Q9.63 4 12 4Q14.93 4 16.96 6.04Q19 8.07 19 11Q20.73 11.2 21.86 12.5Q23 13.78 23 15.5Q23 17.38 21.69 18.69Q20.38 20 18.5 20H6.5Z"/>
+            </svg>
+            <span class="nav-label">Weather</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('market')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18M1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H5.21L4.27 3H1M17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z"/>
+            </svg>
+            <span class="nav-label">Market</span>
+        </div>
+    </nav>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function editAvatar() {
+            alert('Avatar editing feature coming soon! / अवतार संपादन सुविधा जल्द आ रही है!');
+        }
+
+        function editProfile() {
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+            
+            // In a real app, this would open an edit form
+            console.log('Opening profile edit form...');
+        }
+
+        function navigateTo(page) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            event.currentTarget.classList.add('active');
+
+            // Navigate to the appropriate page
+            if (page === 'home') {
+                window.location.href = 'home.html';
+            } else if (page === 'ai-recommendations') {
+                window.location.href = 'ai-assistant.html';
+            } else if (page === 'scan') {
+                window.location.href = 'scan.html';
+            } else if (page === 'market') {
+                window.location.href = 'market.html';
+            } else if (page === 'profile') {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        // Add animation effects
+        document.querySelectorAll('.info-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add loading animation for edit profile
+        document.querySelector('.edit-profile-btn').addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<svg fill="currentColor" viewBox="0 0 24 24" width="20" height="20" style="animation: spin 1s linear infinite;"><path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/></svg> Saving... / सहेजा जा रहा है...';
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

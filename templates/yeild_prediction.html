@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>कृषि धारा - Yield Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            color: #2d5016;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            margin: 0;
+        }
+
+        .leaf-icon {
+            width: 30px;
+            height: 30px;
+            fill: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .profile-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .profile-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .location-info svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .location-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .intro-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 8px;
+        }
+
+        .intro-subtitle {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .input-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d5016;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .input-unit {
+            position: absolute;
+            right: 15px;
+            top: 35px;
+            color: #666;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .range-info {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        .dropdown:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .predict-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .predict-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            display: block; /* Change from 'none' to 'block' */
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .yield-result {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .yield-result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .yield-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+
+        .yield-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 10px;
+        }
+
+        .predicted-yield {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .yield-details {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d5016;
+            margin-top: 2px;
+        }
+
+        .factors-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .factors-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 15px;
+        }
+
+        .factor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .factor-item:last-child {
+            border-bottom: none;
+        }
+
+        .factor-name {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .factor-impact {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .positive {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .negative {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ff9800;
+        }
+
+        .neutral {
+            background: rgba(158, 158, 158, 0.1);
+            color: #666;
+        }
+
+        .recommendations-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .recommendations-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-item {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .recommendation-text {
+            font-size: 13px;
+            color: #2d5016;
+            line-height: 1.4;
+        }
+
+        .loading-animation {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-animation.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="app-brand">
+                <div class="app-logo">
+                    <svg class="leaf-icon" viewBox="0 0 24 24">
+                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                    </svg>
+                </div>
+                <div class="app-title">कृषि धारा</div>
+            </div>
+            <div class="header-actions">
+                <div class="location-info">
+                    <svg fill="white" viewBox="0 0 24 24">
+                        <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                    </svg>
+                    <span class="location-text">Ranchi, Jharkhand</span>
+                </div>
+                <div class="profile-btn" onclick="openProfile()">
+                    <svg fill="white" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro-section">
+            <div class="intro-title">AI Yield Prediction</div>
+            <div class="intro-subtitle">
+                Predict your crop yield using advanced AI models and historical data analysis
+            </div>
+        </div>
+
+        <div class="input-form">
+            <div class="section-title">
+                📊 Basic Information
+            </div>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">
+                        <span>Select Crop</span>
+                    </label>
+                    <select class="dropdown" id="cropType" required>
+                        <option value="">Choose your crop</option>
+                        <option value="rice">Rice</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="corn">Corn (Maize)</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="potato">Potato</option>
+                        <option value="tomato">Tomato</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <span>Farm Area</span>
+                    </label>
+                    <input type="number" class="input-field" id="farmArea" placeholder="Enter farm area" min="0" step="0.1">
+                    <span class="input-unit">acres</span>
+                    <div class="range-info">Total cultivated area</div>
+                </div>
+            </div>
+
+            <button class="predict-btn" onclick="predictYield()">
+                🔮 Predict Yield
+            </button>
+        </div>
+
+        <div class="loading-animation" id="loadingSection">
+            <div class="spinner"></div>
+            <div style="color: #666;">Analyzing data and predicting yield...</div>
+            <div style="font-size: 12px; color: #999; margin-top: 10px;">Processing historical data and current conditions</div>
+        </div>
+
+        <div class="results-section show" id="resultsSection">
+            <div class="yield-result">
+                <div class="yield-icon" id="yieldIcon">🌾</div>
+                <div class="yield-title" id="yieldCrop">Rice Yield Prediction</div>
+                <div class="predicted-yield" id="predictedYield">4.2 tons/hectare</div>
+                
+                <div class="yield-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Total Expected Production</div>
+                        <div class="detail-value" id="totalProduction">8.4 tons</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Estimated Market Value</div>
+                        <div class="detail-value" id="marketValue">₹1,68,000</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Confidence Level</div>
+                        <div class="detail-value" id="confidence">87%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Harvest Timeline</div>
+                        <div class="detail-value" id="timeline">120-130 days</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="factors-section">
+                <div class="factors-title">📈 Factors Affecting Yield</div>
+                <div id="factorsList">
+                    <div class="factor-item">
+                        <span class="factor-name">Soil Quality</span>
+                        <span class="factor-impact positive">+12% Impact</span>
+                    </div>
+                    <div class="factor-item">
+                        <span class="factor-name">Irrigation Method</span>
+                        <span class="factor-impact positive">+8% Impact</span>
+                    </div>
+                    <div class="factor-item">
+                        <span class="factor-name">Weather Conditions</span>
+                        <span class="factor-impact neutral">Neutral</span>
+                    </div>
+                    <div class="factor-item">
+                        <span class="factor-name">Farming Experience</span>
+                        <span class="factor-impact positive">+5% Impact</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations-section">
+                <div class="recommendations-title">💡 AI Recommendations</div>
+                <div id="recommendationsList">
+                    <div class="recommendation-item">
+                        <div class="recommendation-text">Consider using drip irrigation to increase yield by 10-15% and reduce water consumption</div>
+                    </div>
+                    <div class="recommendation-item">
+                        <div class="recommendation-text">Apply organic compost 2 weeks before planting for better soil health and yield</div>
+                    </div>
+                    <div class="recommendation-item">
+                        <div class="recommendation-text">Monitor weather patterns for optimal planting time in your region</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="navigateTo('home')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item active" onclick="navigateTo('ai-recommendations')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 1L9 9L1 12L9 15L12 23L15 15L23 12L15 9L12 1Z"/>
+            </svg>
+            <span class="nav-label">AI Tips</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('scan-diseases')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4A8 8 0 0 1 20 12A8 8 0 0 1 12 20A8 8 0 0 1 4 12A8 8 0 0 1 12 4M12 6A6 6 0 0 0 6 12A6 6 0 0 0 12 18A6 6 0 0 0 18 12A6 6 0 0 0 12 6M12 8A4 4 0 0 1 16 12A4 4 0 0 1 12 16A4 4 0 0 1 8 12A4 4 0 0 1 12 8M11 10V14H13V10H11M10 15V17H14V15H10Z"/>
+            </svg>
+            <span class="nav-label">Scan</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('weather')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6.5 20Q4.22 20 2.61 18.43Q1 16.85 1 14.58Q1 12.63 2.17 11.1Q3.35 9.57 5.25 9.15Q5.88 6.85 7.75 5.43Q9.63 4 12 4Q14.93 4 16.96 6.04Q19 8.07 19 11Q20.73 11.2 21.86 12.5Q23 13.78 23 15.5Q23 17.38 21.69 18.69Q20.38 20 18.5 20H6.5Z"/>
+            </svg>
+            <span class="nav-label">Weather</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('market')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18M1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H5.21L4.27 3H1M17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z"/>
+            </svg>
+            <span class="nav-label">Market</span>
+        </div>
+    </nav>
+
+    <script>
+        const cropData = {
+            rice: { 
+                icon: '🌾', 
+                name: 'Rice', 
+                baseYield: 4.2, 
+                price: 20000, 
+                timeline: '120-130 days'
+            },
+            wheat: { 
+                icon: '🌾', 
+                name: 'Wheat', 
+                baseYield: 3.5, 
+                price: 25000, 
+                timeline: '110-120 days'
+            },
+            corn: { 
+                icon: '🌽', 
+                name: 'Corn (Maize)', 
+                baseYield: 6.0, 
+                price: 18000, 
+                timeline: '90-100 days'
+            },
+            cotton: { 
+                icon: '🌱', 
+                name: 'Cotton', 
+                baseYield: 2.0, 
+                price: 60000, 
+                timeline: '180-200 days'
+            },
+            sugarcane: { 
+                icon: '🎋', 
+                name: 'Sugarcane', 
+                baseYield: 80, 
+                price: 3000, 
+                timeline: '12-16 months'
+            },
+            soybean: { 
+                icon: '🌱', 
+                name: 'Soybean', 
+                baseYield: 2.8, 
+                price: 40000, 
+                timeline: '90-120 days'
+            },
+            potato: { 
+                icon: '🥔', 
+                name: 'Potato', 
+                baseYield: 25, 
+                price: 15000, 
+                timeline: '70-90 days'
+            },
+            tomato: { 
+                icon: '🍅', 
+                name: 'Tomato', 
+                baseYield: 30, 
+                price: 12000, 
+                timeline: '75-85 days'
+            }
+        };
+
+        function predictYield() {
+            const cropType = document.getElementById('cropType').value;
+            const farmArea = parseFloat(document.getElementById('farmArea').value);
+
+            // Validate inputs
+            if (!cropType || isNaN(farmArea) || farmArea <= 0) {
+                alert('Please select a crop and enter a valid farm area');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingSection').classList.add('show');
+            document.getElementById('resultsSection').classList.remove('show');
+
+            // Simulate prediction analysis
+            setTimeout(() => {
+                const prediction = calculateYield(cropType, farmArea);
+                displayYieldResults(prediction);
+                
+                document.getElementById('loadingSection').classList.remove('show');
+                document.getElementById('resultsSection').classList.add('show');
+                
+                // Scroll to results
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+
+        function calculateYield(cropType, farmArea) {
+            const crop = cropData[cropType];
+            
+            // Add some realistic variation (±15%)
+            const variationFactor = 0.85 + (Math.random() * 0.3);
+            const yieldPerHectare = crop.baseYield * variationFactor;
+            
+            // Convert acres to hectares (1 acre = 0.4047 hectares)
+            const areaInHectares = farmArea * 0.4047;
+            
+            const totalProduction = yieldPerHectare * areaInHectares;
+            const marketValue = totalProduction * crop.price;
+            const confidence = Math.floor(80 + (Math.random() * 15)); // 80-95%
+
+            return {
+                crop: crop,
+                yieldPerHectare: yieldPerHectare.toFixed(1),
+                totalProduction: totalProduction.toFixed(1),
+                marketValue: marketValue,
+                confidence: confidence,
+                farmArea: farmArea
+            };
+        }
+
+        function displayYieldResults(prediction) {
+            document.getElementById('yieldIcon').textContent = prediction.crop.icon;
+            document.getElementById('yieldCrop').textContent = `${prediction.crop.name} Yield Prediction`;
+            document.getElementById('predictedYield').textContent = `${prediction.yieldPerHectare} tons/hectare`;
+            document.getElementById('totalProduction').textContent = `${prediction.totalProduction} tons`;
+            document.getElementById('marketValue').textContent = `₹${formatNumber(prediction.marketValue)}`;
+            document.getElementById('confidence').textContent = `${prediction.confidence}%`;
+            document.getElementById('timeline').textContent = prediction.crop.timeline;
+
+            // Update factors with realistic data
+            updateFactors();
+            
+            // Update recommendations based on crop
+            updateRecommendations(prediction.crop.name);
+        }
+
+        function updateFactors() {
+            const factorsHtml = `
+                <div class="factor-item">
+                    <span class="factor-name">Regional Climate</span>
+                    <span class="factor-impact positive">+${Math.floor(8 + Math.random() * 7)}% Impact</span>
+                </div>
+                <div class="factor-item">
+                    <span class="factor-name">Soil Fertility</span>
+                    <span class="factor-impact positive">+${Math.floor(5 + Math.random() * 8)}% Impact</span>
+                </div>
+                <div class="factor-item">
+                    <span class="factor-name">Water Availability</span>
+                    <span class="factor-impact ${Math.random() > 0.3 ? 'positive' : 'neutral'}">${Math.random() > 0.3 ? '+' + Math.floor(3 + Math.random() * 6) + '% Impact' : 'Neutral'}</span>
+                </div>
+                <div class="factor-item">
+                    <span class="factor-name">Market Demand</span>
+                    <span class="factor-impact positive">+${Math.floor(4 + Math.random() * 5)}% Impact</span>
+                </div>
+            `;
+            document.getElementById('factorsList').innerHTML = factorsHtml;
+        }
+
+        function updateRecommendations(cropName) {
+            const recommendations = {
+                'Rice': [
+                    'Maintain water levels at 2-3 inches during growing season for optimal yield',
+                    'Apply balanced fertilizer (NPK 12:12:17) for better grain formation',
+                    'Consider SRI (System of Rice Intensification) method to increase yield by 20-30%'
+                ],
+                'Wheat': [
+                    'Plant during optimal sowing window (November-December) for maximum yield',
+                    'Use disease-resistant varieties to prevent rust and other diseases',
+                    'Apply phosphorus fertilizer at sowing for better root development'
+                ],
+                'Corn (Maize)': [
+                    'Ensure proper spacing (60cm x 20cm) for better light penetration',
+                    'Apply nitrogen in split doses - 50% at sowing, 50% at knee-high stage',
+                    'Monitor for fall armyworm and apply bio-pesticides if needed'
+                ],
+                'Cotton': [
+                    'Use drip irrigation to reduce water consumption by 40%',
+                    'Practice crop rotation with legumes to improve soil nitrogen',
+                    'Monitor for bollworm and use integrated pest management'
+                ],
+                'Sugarcane': [
+                    'Plant disease-free seed cane from certified nurseries',
+                    'Apply organic matter (FYM) at 25 tons per hectare before planting',
+                    'Implement drip irrigation for water and fertilizer efficiency'
+                ],
+                'Soybean': [
+                    'Inoculate seeds with Rhizobium bacteria for better nitrogen fixation',
+                    'Maintain proper drainage to prevent waterlogging during monsoon',
+                    'Harvest at right maturity (R8 stage) for maximum oil content'
+                ],
+                'Potato': [
+                    'Use certified seed potatoes to prevent disease transmission',
+                    'Apply potash fertilizer for better tuber quality and storage life',
+                    'Practice earthing up 2-3 times during growing season'
+                ],
+                'Tomato': [
+                    'Use hybrid varieties for better disease resistance and yield',
+                    'Provide proper staking support for determinate varieties',
+                    'Apply calcium to prevent blossom end rot in fruits'
+                ]
+            };
+
+            const cropRecommendations = recommendations[cropName] || [
+                'Follow recommended spacing and planting density for your crop',
+                'Use quality seeds from certified suppliers',
+                'Monitor weather conditions and adjust farming practices accordingly'
+            ];
+
+            const recommendationsHtml = cropRecommendations.map(rec => 
+                `<div class="recommendation-item">
+                    <div class="recommendation-text">${rec}</div>
+                </div>`
+            ).join('');
+
+            document.getElementById('recommendationsList').innerHTML = recommendationsHtml;
+        }
+
+        function formatNumber(num) {
+            if (num >= 10000000) {
+                return (num / 10000000).toFixed(1) + ' Cr';
+            } else if (num >= 100000) {
+                return (num / 100000).toFixed(1) + ' L';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(0) + 'K';
+            }
+            return num.toString();
+        }
+
+        function openProfile() {
+            alert('Profile page would open here');
+        }
+
+        function navigateTo(page) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            event.currentTarget.classList.add('active');
+
+            // Navigate to the appropriate page
+            if (page === 'ai-recommendations') {
+                window.location.href = 'ai-assistant.html';
+            } else if (page === 'weather') {
+                window.location.href = 'weather.html';
+            } else if (page === 'market') {
+                window.location.href = 'market.html';
+            } else if (page === 'scan-diseases') {
+                window.location.href = 'scan.html';
+            } else if (page === 'home') {
+                window.location.href = 'home.html';
+            } else {
+                alert(`Navigating to ${page} page`);
+            }
+        }
+
+        // Input validation
+        document.getElementById('farmArea').addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            if (isNaN(value) || value <= 0) {
+                this.style.borderColor = '#f44336';
+            } else {
+                this.style.borderColor = '#4CAF50';
+            }
+        });
+
+        document.getElementById('cropType').addEventListener('change', function() {
+            if (this.value) {
+                this.style.borderColor = '#4CAF50';
+            } else {
+                this.style.borderColor = '#e0e0e0';
+            }
+        });
+    </script>
+</body>
+</html>

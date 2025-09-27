@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Insights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            color: #2d5016;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            margin: 0;
+        }
+
+        .leaf-icon {
+            width: 30px;
+            height: 30px;
+            fill: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .profile-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .profile-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .location-info svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .location-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .market-section {
+            padding: 30px 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2d5016;
+        }
+
+        .crop-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .category-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .market-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            gap: 15px;
+        }
+
+        .market-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #4CAF50, #45a049);
+        }
+
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.2);
+        }
+
+        .market-status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            /* gap: 5px; */
+        }
+
+        .crop-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            flex-shrink: 0;
+        }
+
+        .crop-info {
+            flex: 1;
+        }
+
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .market-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5016;
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .market-status {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .market-status.stable {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+
+        .market-status.low-supply {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+
+        .market-status.seasonal {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+        }
+
+        .market-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .market-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .market-price {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(244, 67, 54, 0.3);
+            z-index: 10;
+        }
+
+        .close:hover {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.5);
+        }
+
+        .close:active {
+            transform: scale(0.95);
+        }
+
+        .modal-crop-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-price {
+            font-size: 20px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-details {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .price-change {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .price-change.increase {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .price-change.decrease {
+            color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="app-brand">
+                <div class="app-logo">
+                    <svg class="leaf-icon" viewBox="0 0 24 24">
+                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                    </svg>
+                </div>
+                <div class="app-title">कृषि धारा</div>
+            </div>
+            <div class="header-actions">
+                <div class="location-info">
+                    <svg fill="white" viewBox="0 0 24 24">
+                        <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                    </svg>
+                    <span class="location-text">Ranchi, Jharkhand</span>
+                </div>
+                <div class="profile-btn" onclick="openProfile()">
+                    <svg fill="white" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="market-section">
+        <h2 class="section-title">Market Insights</h2>
+        
+        <div class="crop-categories">
+            <button class="category-btn active" onclick="filterCrops('all')">All</button>
+            <button class="category-btn" onclick="filterCrops('cereals')">Cereals</button>
+            <button class="category-btn" onclick="filterCrops('fruits')">Fruits</button>
+            <button class="category-btn" onclick="filterCrops('flowers')">Flowers</button>
+        </div>
+
+        <!-- Cereals -->
+        <div class="market-card cereals" onclick="openModal('wheat')">
+            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=150&h=150&fit=crop" alt="Wheat" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Wheat</div>
+                        <div class="price-change increase">+5.2%</div>
+                    </div>
+                    <div class="market-status">High Demand</div>
+                </div>
+                <div class="market-description">
+                    Wheat prices are rising due to increased demand in domestic and international markets.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹22/kg</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('wheat')">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-card cereals" onclick="openModal('rice')">
+            <img src="https://imgs.search.brave.com/m6LaHuQGRUQ3hra1EogXMKnK13EvAlUkjKp3pNCUDP0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNjUz/OTAzMTk4L3Bob3Rv/L3JpY2UuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPWpiYUs3/TFlTYWlETWo4NFNL/N2hWbFVaTW5GOV9j/X19MRW9kNHdRdzE0/NlU9" alt="Rice" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Rice</div>
+                        <div class="price-change decrease">-1.8%</div>
+                    </div>
+                    <div class="market-status stable">Stable</div>
+                </div>
+                <div class="market-description">
+                    Rice prices remain stable due to balanced supply and demand in the market.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹18/kg</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('rice')">View Details</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div class="market-card cereals" onclick="openModal('soybean')">
+            <img src="data:image/jpeg;base64,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" alt="Rice" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Soyabean</div>
+                        <div class="price-change increase">+8.5%</div>
+                    </div>
+                    <div class="market-status low-supply">Low Supply</div>
+                </div>
+                <div class="market-description">
+                    Soyabean prices are increasing due to reduced supply caused by unfavorable weather conditions.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹40/kg</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('soybean')">View Details</button>
+                </div>
+            </div>
+        </div>
+
+         <div class="market-card fruits" onclick="openModal('apple')">
+            <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=150&h=150&fit=crop" alt="Apple" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Apple</div>
+                        <div class="price-change increase">+3.7%</div>
+                    </div>
+                    <div class="market-status-container">
+                        <div class="market-status seasonal">Seasonal</div>
+                    </div>
+                </div>
+                <div class="market-description">
+                    Fresh apple harvest season with premium quality fruits available in the market.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹120/kg</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('apple')">View Details</button>
+                </div>
+            </div>
+        </div> --> 
+
+        <div class="market-card fruits" onclick="openModal('mango')">
+            <img src="https://imgs.search.brave.com/kJHe1ij6d0boqW6fiAvpg4EC0YvX8FwaCUc27ZTck9I/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTUz/NTA1MTMzL3Bob3Rv/L2ZyZXNoLW1hbmdv/ZXMuanBnP3M9NjEy/eDYxMiZ3PTAmaz0y/MCZjPUVPS3RGcElh/Q09pU21pcjFDQ1g1/YUpieXNKT05NdXJ0/OUtJVE1JVFdJSW89" alt="Mango" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Mango</div>
+                        <div class="price-change increase">+6.2%</div>
+                    </div>
+                    <div class="market-status">High Demand</div>
+                </div>
+                <div class="market-description">
+                    Premium Alphonso mangoes with high export demand pushing prices up.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹180/kg</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('mango')">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flowers -->
+        <div class="market-card flowers" onclick="openModal('rose')">
+            <img src="https://imgs.search.brave.com/8NdgtFX_fnOCEgDvVOonuE6oWTjqAmJ0S_1c1FjtpoE/rs:fit:500:0:1:0/g:ce/aHR0cDovL3VyYmFu/ZmFybW9seS5jb20v/d3AtY29udGVudC91/cGxvYWRzLzIwMjIv/MDMvZGF2aWQtYXVz/dGluLXJvc2VzLmpw/ZWc" alt="Rose" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Rose</div>
+                        <div class="price-change decrease">-2.1%</div>
+                    </div>
+                    <div class="market-status seasonal">Seasonal</div>
+                </div>
+                <div class="market-description">
+                    Premium quality roses for export and local decoration market with good demand.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹25/stem</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('rose')">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-card flowers" onclick="openModal('marigold')">
+            <img src="https://imgs.search.brave.com/RYixbRNBARaYjLmHfJqM_SJlXscvp81jYYPVQ_mK5hA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/MDQ1MjAyNy9waG90/by9iZWF1dGlmdWwt/bWFyaWdvbGQteWVs/bG93LWZsb3dlcnMu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PUYxZ2VTblpHX0I3/ekxYY2pCdXdOMnVy/N0V3c1ZrVWVwWVhn/dFFPV1ZQeWM9" alt="Marigold" class="crop-image">
+            <div class="crop-info">
+                <div class="market-header">
+                    <div>
+                        <div class="market-title">Marigold</div>
+                        <div class="price-change increase">+4.8%</div>
+                    </div>
+                    <div class="market-status">High Demand</div>
+                </div>
+                <div class="market-description">
+                    Festival season driving high demand for marigold flowers across local markets.
+                </div>
+                <div class="market-details">
+                    <div class="market-price">₹8/stem</div>
+                    <button class="view-btn" onclick="event.stopPropagation(); openModal('marigold')">View Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content">
+            <button class="close" onclick="closeModal()">&times;</button>
+            <img id="modalImage" src="" alt="" class="modal-crop-image">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div id="modalPrice" class="modal-price"></div>
+            <div id="modalDetails" class="modal-details"></div>
+            <div class="modal-stats" id="modalStats"></div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="navigateTo('home')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('ai-recommendations')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 1L9 9L1 12L9 15L12 23L15 15L23 12L15 9L12 1Z"/>
+            </svg>
+            <span class="nav-label">AI Tips</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('scan')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4A8 8 0 0 1 20 12A8 8 0 0 1 12 20A8 8 0 0 1 4 12A8 8 0 0 1 12 4M12 6A6 6 0 0 0 6 12A6 6 0 0 0 12 18A6 6 0 0 0 18 12A6 6 0 0 0 12 6M12 8A4 4 0 0 1 16 12A4 4 0 0 1 12 16A4 4 0 0 1 8 12A4 4 0 0 1 12 8M11 10V14H13V10H11M10 15V17H14V15H10Z"/>
+            </svg>
+            <span class="nav-label">Scan</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('weather')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6.5 20Q4.22 20 2.61 18.43Q1 16.85 1 14.58Q1 12.63 2.17 11.1Q3.35 9.57 5.25 9.15Q5.88 6.85 7.75 5.43Q9.63 4 12 4Q14.93 4 16.96 6.04Q19 8.07 19 11Q20.73 11.2 21.86 12.5Q23 13.78 23 15.5Q23 17.38 21.69 18.69Q20.38 20 18.5 20H6.5Z"/>
+            </svg>
+            <span class="nav-label">Weather</span>
+        </div>
+        <div class="nav-item active" onclick="navigateTo('market')">
+            <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18M1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H5.21L4.27 3H1M17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z"/>
+            </svg>
+            <span class="nav-label">Market</span>
+        </div>
+    </nav>
+
+    <script>
+        const cropData = {
+            wheat: {
+                image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=300&fit=crop",
+                title: "Wheat",
+                price: "₹22/kg",
+                description: "Wheat is one of the most important cereal crops in India. Current prices are rising due to increased demand in both domestic and international markets. The quality of this season's harvest is excellent with high protein content.",
+                stats: {
+                    "Market Trend": "Upward",
+                    "Quality Grade": "Premium A+",
+                    "Export Demand": "High",
+                    "Storage Life": "12 months"
+                }
+            },
+            rice: {
+                image: "https://imgs.search.brave.com/m6LaHuQGRUQ3hra1EogXMKnK13EvAlUkjKp3pNCUDP0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNjUz/OTAzMTk4L3Bob3Rv/L3JpY2UuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPWpiYUs3/TFlTYWlETWo4NFNL/N2hWbFVaTW5GOV9j/X19MRW9kNHdRdzE0/NlU9",
+                title: "Rice",
+                price: "₹18/kg",
+                description: "Basmati rice varieties showing stable market conditions. The supply-demand balance is well maintained with consistent quality across different regions. Good monsoon has ensured adequate production.",
+                stats: {
+                    "Market Trend": "Stable",
+                    "Quality Grade": "Grade A",
+                    "Export Demand": "Moderate",
+                    "Storage Life": "18 months"
+                }
+            },
+            soybean: {
+                image: "https://imgs.search.brave.com/AxTNTkPnIz7CzMB803YskkaEUw8q0-EJbqKuCKDJWfA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/Y29tbW9kaXR5b25z/aW5lLmNvbS9sZWFk/cy8yMDI1LzA5LzE2/NzYzNzQ3OTlfNjNl/YjczMGZkMTJhZV8y/X3RodW1iLndlYnA",
+                title: "Soybean",
+                price: "₹40/kg",
+                description: "Soybean prices have increased significantly due to reduced supply caused by unfavorable weather conditions in key growing regions. High protein content makes it valuable for both domestic consumption and export.",
+                stats: {
+                    "Market Trend": "High Rise",
+                    "Quality Grade": "Premium",
+                    "Export Demand": "Very High",
+                    "Storage Life": "6 months"
+                }
+            },
+            apple: {
+                image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&h=300&fit=crop",
+                title: "Apple",
+                price: "₹120/kg",
+                description: "Fresh apple harvest season with premium quality fruits available. Himachal Pradesh and Kashmir varieties are in high demand. Cold storage facilities ensure year-round availability.",
+                stats: {
+                    "Market Trend": "Seasonal Peak",
+                    "Quality Grade": "Premium",
+                    "Export Demand": "Good",
+                    "Storage Life": "3-6 months"
+                }
+            },
+            mango: {
+                image: "https://imgs.search.brave.com/kJHe1ij6d0boqW6fiAvpg4EC0YvX8FwaCUc27ZTck9I/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTUz/NTA1MTMzL3Bob3Rv/L2ZyZXNoLW1hbmdv/ZXMuanBnP3M9NjEy/eDYxMiZ3PTAmaz0y/MCZjPUVPS3RGcElh/Q09pU21pcjFDQ1g1/YUpieXNKT05NdXJ0/OUtJVE1JVFdJSW89",
+                title: "Mango",
+                price: "₹180/kg",
+                description: "Premium Alphonso and Kesar varieties are commanding high prices due to excellent quality and strong export demand. Summer season peak with limited availability driving prices up.",
+                stats: {
+                    "Market Trend": "Peak Season",
+                    "Quality Grade": "Export Quality",
+                    "Export Demand": "Very High",
+                    "Storage Life": "1-2 weeks"
+                }
+            },
+            rose: {
+                image: "https://imgs.search.brave.com/8NdgtFX_fnOCEgDvVOonuE6oWTjqAmJ0S_1c1FjtpoE/rs:fit:500:0:1:0/g:ce/aHR0cDovL3VyYmFu/ZmFybW9seS5jb20v/d3AtY29udGVudC91/cGxvYWRzLzIwMjIv/MDMvZGF2aWQtYXVz/dGluLXJvc2VzLmpw/ZWc",
+                title: "Rose",
+                price: "₹25/stem",
+                description: "Premium quality roses for export and local decoration market. Strong demand from florists and event management companies. Peak season for weddings and festivals driving prices.",
+                stats: {
+                    "Market Trend": "High Demand",
+                    "Quality Grade": "Premium",
+                    "Export Demand": "Good",
+                    "Storage Life": "3-5 days"
+                }
+            },
+            marigold: {
+                image: "hhttps://imgs.search.brave.com/RYixbRNBARaYjLmHfJqM_SJlXscvp81jYYPVQ_mK5hA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/MDQ1MjAyNy9waG90/by9iZWF1dGlmdWwt/bWFyaWdvbGQteWVs/bG93LWZsb3dlcnMu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PUYxZ2VTblpHX0I3/ekxYY2pCdXdOMnVy/N0V3c1ZrVWVwWVhn/dFFPV1ZQeWM9ttps://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=400&h=300&fit=crop",
+                title: "Marigold",
+                price: "₹8/stem",
+                description: "Festival season is driving exceptional demand for marigold flowers across local markets. Religious ceremonies and decorations are the primary consumption drivers.",
+                stats: {
+                    "Market Trend": "Festival Boost",
+                    "Quality Grade": "Fresh A+",
+                    "Local Demand": "Very High",
+                    "Storage Life": "2-3 days"
+                }
+            }
+        };
+
+        function filterCrops(category) {
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show/hide crop cards
+            const cards = document.querySelectorAll('.market-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains(category)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openModal(cropId) {
+            const crop = cropData[cropId];
+            if (!crop) return;
+
+            document.getElementById('modalImage').src = crop.image;
+            document.getElementById('modalTitle').textContent = crop.title;
+            document.getElementById('modalPrice').textContent = crop.price;
+            document.getElementById('modalDetails').textContent = crop.description;
+
+            // Generate stats
+            const statsContainer = document.getElementById('modalStats');
+            statsContainer.innerHTML = '';
+            Object.entries(crop.stats).forEach(([label, value]) => {
+                const statItem = document.createElement('div');
+                statItem.className = 'stat-item';
+                statItem.innerHTML = `
+                    <div class="stat-value">${value}</div>
+                    <div class="stat-label">${label}</div>
+                `;
+                statsContainer.appendChild(statItem);
+            });
+
+            document.getElementById('cropModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('cropModal').style.display = 'none';
+        }
+
+        function navigateTo(page) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            event.currentTarget.classList.add('active');
+
+            // Navigate to the appropriate page
+            if (page === 'ai-recommendations') {
+                window.location.href = 'ai-assistant.html';
+            } else if (page === 'weather') {
+                window.location.href = 'weather.html';
+            } else if (page === 'market') {
+                window.location.href = 'market.html';
+            } else if (page === 'scan') {
+                window.location.href = 'scan.html';
+            } else if (page === 'home') {
+                window.location.href = 'home.html';
+            } else {
+                alert(`Navigating to ${page} page`);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cropModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
